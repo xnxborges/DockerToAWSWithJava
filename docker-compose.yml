@@ -1,0 +1,38 @@
+version: '3.4'
+services:
+  db:
+    image: mysql:8.0.30
+    command: mysql --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      MYSQL_DATABASE: docker_to_aws_with_java
+    ports:
+      - "3308:3306"
+    networks:
+      - udemy-network
+  docker-to-aws-with-java:
+    image: docker-to-aws-with-java
+    restart: always
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    working_dir: /src
+    environment:
+      TZ: America/Sao_Paulo
+    ports:
+      - "8081:8081"
+    command:
+      - mvn spring-boot:run
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - udemy-network
+networks:
+  udemy-network:
+    driver: bridge

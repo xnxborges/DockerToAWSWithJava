@@ -1,0 +1,22 @@
+language: java
+jdk:
+  - oraclejdk11
+before_install:
+  - sudo apt-get update
+  - cd src/
+  - echo "Let's start maven package"
+  - mvn clean package
+  - echo "We are in the Docker folder!"
+script:
+  - docker-compose build
+before_deploy:
+  echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+deploy:
+  provider: script
+  script:
+    docker tag docker-to-aws-with-java:latest xnxborges93/docker-to-aws-with-java:latest;
+    docker push xnxborges93/docker-to-aws-with-java;
+  on:
+    branch: master
+notifications:
+  email: false
