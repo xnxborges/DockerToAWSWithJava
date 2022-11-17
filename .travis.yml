@@ -3,10 +3,10 @@ jdk:
   - oraclejdk11
 before_install:
   - sudo apt-get update
-  - cd src/
+  - cd ./
   - echo "Let's start maven package"
   - mvn clean package
-  - echo "We are in the Docker folder!"
+  - echo "We are in the Docker folder!!"
 script:
   - docker-compose build
 before_deploy:
